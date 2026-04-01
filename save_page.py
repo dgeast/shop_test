@@ -1,808 +1,458 @@
 """
 아하 하모 칫솔 상세페이지 HTML 파일 저장 스크립트
-F:\dev\projects\shop_test 폴더에 저장
+이미지 플레이스홀더: __IMG1__ ~ __IMG4__ (app.py에서 base64로 교체)
 """
 
 import os
 from pathlib import Path
 
-# 저장 경로 설정
 save_dir = Path(r'F:\dev\projects\shop_test')
 save_dir.mkdir(parents=True, exist_ok=True)
 
-# HTML 내용
-html_content = """<!-- 네이버 스마트스토어용 상세페이지 - 구매전환 최적화 버전 -->
+html_content = """<!-- 네이버 스마트스토어용 상세페이지 -->
 
 <style>
-.product-page * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+.pp * { margin:0; padding:0; box-sizing:border-box; }
 
-.product-page {
-    font-family: 'Malgun Gothic', sans-serif;
+.pp {
+    font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
     color: #333;
     max-width: 860px;
     margin: 0 auto;
     background: #fff;
 }
 
-/* 메인 비주얼 */
+/* ── 히어로 ── */
 .hero {
-    background: linear-gradient(135deg, #00a8a8 0%, #00d4d4 100%);
-    color: white;
-    padding: 50px 30px;
-    text-align: center;
+    display: table;
+    width: 100%;
+    background: linear-gradient(135deg, #00a8a8 0%, #00c8c8 100%);
+    color: #fff;
 }
-
+.hero-text { display: table-cell; width: 52%; vertical-align: middle; padding: 50px 30px 50px 40px; }
+.hero-img  { display: table-cell; width: 48%; vertical-align: bottom; padding: 0; }
+.hero-img img {
+    display: block;
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    object-position: center;
+}
 .hero-badge {
-    background: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.25);
     display: inline-block;
-    padding: 8px 20px;
+    padding: 6px 16px;
     border-radius: 20px;
-    font-size: 14px;
-    margin-bottom: 20px;
+    font-size: 12px;
+    margin-bottom: 18px;
     font-weight: bold;
+    letter-spacing: 0.5px;
 }
-
-.hero-title {
-    font-size: 38px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    line-height: 1.3;
-}
-
-.hero-subtitle {
-    font-size: 18px;
-    margin-bottom: 30px;
-    opacity: 0.95;
-}
-
+.hero-title { font-size: 34px; font-weight: bold; line-height: 1.35; margin-bottom: 12px; }
+.hero-sub   { font-size: 15px; opacity: .9; margin-bottom: 28px; line-height: 1.6; }
 .price-box {
-    background: rgba(255,255,255,0.2);
-    padding: 25px;
-    border-radius: 15px;
-    max-width: 350px;
-    margin: 0 auto;
-}
-
-.price-original {
-    font-size: 16px;
-    text-decoration: line-through;
-    opacity: 0.8;
-    margin-bottom: 8px;
-}
-
-.price-current {
-    font-size: 42px;
-    font-weight: bold;
-    color: #ffd700;
-    margin-bottom: 10px;
-}
-
-.price-badge {
-    background: #ff4757;
-    color: white;
-    padding: 8px 18px;
-    border-radius: 20px;
-    font-weight: bold;
+    background: rgba(0,0,0,0.18);
+    border-radius: 12px;
+    padding: 18px 22px;
     display: inline-block;
 }
-
-/* 이미지 섹션 */
-.image-section {
-    padding: 40px 20px;
-    text-align: center;
-    background: #f8f9fa;
+.price-original { font-size: 14px; text-decoration: line-through; opacity: .75; margin-bottom: 4px; }
+.price-current  { font-size: 38px; font-weight: bold; color: #ffd700; line-height: 1; margin-bottom: 8px; }
+.price-badge {
+    background: #ff4757; color: #fff;
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 13px; font-weight: bold;
 }
 
-.img-placeholder {
-    background: #e9ecef;
-    border: 3px dashed #00a8a8;
-    border-radius: 10px;
-    padding: 80px 20px;
-    margin: 20px 0;
-    color: #00a8a8;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-/* 3가지 이유 (핵심 셀링포인트) */
-.reasons-section {
-    padding: 60px 30px;
-    background: white;
-}
-
-.section-header {
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.section-title {
-    font-size: 32px;
-    font-weight: bold;
-    color: #2d3748;
-    margin-bottom: 15px;
-}
-
-.section-subtitle {
-    font-size: 16px;
-    color: #718096;
-}
-
-.reason-grid {
-    display: table;
-    width: 100%;
-}
-
-.reason-item {
-    display: table-cell;
-    width: 33.33%;
-    padding: 20px;
-    text-align: center;
-    vertical-align: top;
-}
-
-.reason-icon {
-    width: 100px;
-    height: 100px;
+/* ── 이유 3가지 ── */
+.reasons { padding: 60px 30px; background: #fff; }
+.sec-hd   { text-align: center; margin-bottom: 45px; }
+.sec-title { font-size: 28px; font-weight: bold; color: #1a2533; margin-bottom: 10px; }
+.sec-sub   { font-size: 14px; color: #888; }
+.reason-row { display: table; width: 100%; }
+.reason-cell { display: table-cell; width: 33.33%; padding: 15px; text-align: center; vertical-align: top; }
+.r-icon {
+    width: 88px; height: 88px;
     background: linear-gradient(135deg, #00a8a8, #00d4d4);
-    border-radius: 50%;
-    margin: 0 auto 20px;
-    line-height: 100px;
-    font-size: 48px;
+    border-radius: 50%; margin: 0 auto 18px;
+    line-height: 88px; font-size: 42px;
+}
+.r-title { font-size: 18px; font-weight: bold; color: #1a2533; margin-bottom: 10px; }
+.r-desc  { font-size: 14px; color: #555; line-height: 1.7; }
+
+/* ── 컬러 섹션 (이미지 + 컬러 정보) ── */
+.color-split { display: table; width: 100%; background: #f4fbfb; }
+.cs-img  { display: table-cell; width: 50%; vertical-align: middle; padding: 0; }
+.cs-img img {
+    display: block; width: 100%;
+    height: 360px; object-fit: cover; object-position: center;
+}
+.cs-info { display: table-cell; width: 50%; vertical-align: middle; padding: 40px 35px; }
+.cs-title { font-size: 24px; font-weight: bold; color: #1a2533; margin-bottom: 8px; line-height: 1.4; }
+.cs-sub   { font-size: 14px; color: #666; margin-bottom: 28px; line-height: 1.6; }
+.color-list { list-style: none; }
+.color-list li {
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 0; border-bottom: 1px solid #e0f0f0;
+    font-size: 15px; font-weight: bold; color: #333;
+}
+.color-list li:last-child { border-bottom: none; }
+.c-dot { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,.2); }
+.c-pink   { background: #e74c7d; }
+.c-teal   { background: #00b09b; }
+.c-yellow { background: #f0c040; }
+.c-purple { background: #8e44ad; }
+
+/* ── 신뢰 배지 ── */
+.trust {
+    padding: 45px 30px;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: #fff; text-align: center;
+}
+.trust-icon  { font-size: 52px; margin-bottom: 16px; }
+.trust-title { font-size: 24px; font-weight: bold; margin-bottom: 12px; }
+.trust-desc  { font-size: 15px; opacity: .95; line-height: 1.8; }
+
+/* ── 품질 디테일 (이미지 + 포인트) ── */
+.detail-split { display: table; width: 100%; background: #fff; }
+.ds-info { display: table-cell; width: 50%; vertical-align: middle; padding: 40px 35px; }
+.ds-img  { display: table-cell; width: 50%; vertical-align: middle; padding: 30px 20px 30px 0; }
+.ds-img img {
+    display: block; width: 100%; border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.12);
+    object-fit: cover; height: 320px; object-position: center;
+}
+.ds-title { font-size: 24px; font-weight: bold; color: #1a2533; margin-bottom: 20px; line-height: 1.4; }
+.point-list { list-style: none; }
+.point-list li {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+    font-size: 14px; color: #444; line-height: 1.6;
+}
+.point-list li:last-child { border-bottom: none; }
+.pt-num {
+    min-width: 26px; height: 26px; background: #00a8a8;
+    color: #fff; border-radius: 50%; text-align: center;
+    line-height: 26px; font-size: 12px; font-weight: bold; flex-shrink: 0;
 }
 
-.reason-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #2d3748;
-    margin-bottom: 12px;
+/* ── 공공기관 납품 (이미지 + 텍스트) ── */
+.inst-split { display: table; width: 100%; background: #f8f9fa; }
+.is-img  { display: table-cell; width: 46%; vertical-align: middle; padding: 30px 0 30px 30px; }
+.is-img img {
+    display: block; width: 100%; border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.1);
+    object-fit: cover; height: 300px; object-position: center;
 }
-
-.reason-desc {
-    font-size: 15px;
-    color: #4a5568;
-    line-height: 1.6;
+.is-info { display: table-cell; width: 54%; vertical-align: middle; padding: 40px 35px; }
+.is-title { font-size: 24px; font-weight: bold; color: #1a2533; margin-bottom: 6px; line-height: 1.4; }
+.is-sub   { font-size: 14px; color: #777; margin-bottom: 24px; }
+.inst-row { display: table; width: 100%; margin-bottom: 10px; }
+.inst-cell { display: table-cell; width: 33.33%; text-align: center; padding: 10px 6px; }
+.inst-icon  { font-size: 32px; margin-bottom: 8px; }
+.inst-label { font-size: 13px; font-weight: bold; color: #00a8a8; margin-bottom: 4px; }
+.inst-desc  { font-size: 12px; color: #666; line-height: 1.5; }
+.contact-box {
+    background: #fff; border-radius: 10px;
+    padding: 16px 20px; margin-top: 18px;
+    border-left: 4px solid #00a8a8;
+    font-size: 13px; color: #444; line-height: 1.8;
 }
+.contact-box strong { color: #00a8a8; }
 
-/* 컬러 선택 */
-.color-section {
-    padding: 60px 30px;
-    background: #f8f9fa;
-    text-align: center;
-}
-
-.color-title {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 40px;
-    color: #2d3748;
-}
-
-.color-grid {
-    display: table;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.color-box {
-    display: table-cell;
-    width: 25%;
-    padding: 15px;
-}
-
-.color-circle {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin: 0 auto 15px;
-    border: 4px solid #fff;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-}
-
-.color-purple { background: #9b59b6; }
-.color-green { background: #27ae60; }
-.color-red { background: #e74c3c; }
-.color-orange { background: #f39c12; }
-
-.color-name {
-    font-weight: bold;
-    font-size: 16px;
-    color: #2d3748;
-}
-
-/* 신뢰 배지 */
-.trust-section {
-    padding: 50px 30px;
-    background: linear-gradient(135deg, #48bb78, #38a169);
-    color: white;
-    text-align: center;
-}
-
-.trust-icon {
-    font-size: 60px;
-    margin-bottom: 20px;
-}
-
-.trust-title {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.trust-desc {
-    font-size: 16px;
-    opacity: 0.95;
-    line-height: 1.7;
-}
-
-/* 제품 스펙 (간결하게) */
-.spec-section {
-    padding: 60px 30px;
-    background: white;
-}
-
+/* ── 스펙 ── */
+.spec { padding: 60px 30px; background: #fff; }
 .spec-table {
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    width: 100%; max-width: 680px;
+    margin: 0 auto; border-collapse: collapse;
+    border-radius: 10px; overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0,0,0,.08);
 }
+.spec-table tr { border-bottom: 1px solid #e8f4f4; }
+.spec-table tr:last-child { border-bottom: none; }
+.spec-table td { padding: 16px 20px; font-size: 15px; }
+.spec-table tr:nth-child(even) { background: #f4fbfb; }
+.sl { font-weight: bold; color: #555; width: 38%; }
+.sv { color: #00a8a8; font-weight: bold; }
 
-.spec-table tr {
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.spec-table tr:last-child {
-    border-bottom: none;
-}
-
-.spec-table td {
-    padding: 20px;
-    font-size: 16px;
-}
-
-.spec-label {
-    font-weight: bold;
-    color: #4a5568;
-    width: 40%;
-}
-
-.spec-value {
-    color: #00a8a8;
-    font-weight: bold;
-}
-
-/* 후기 섹션 (간단하게) */
-.review-section {
-    padding: 60px 30px;
-    background: #f8f9fa;
-}
-
-.review-grid {
-    display: table;
-    width: 100%;
-    margin-top: 40px;
-}
-
-.review-box {
-    display: table-cell;
-    width: 33.33%;
-    padding: 15px;
-    vertical-align: top;
-}
-
+/* ── 후기 ── */
+.review { padding: 60px 30px; background: #f8f9fa; }
+.review-row { display: table; width: 100%; margin-top: 35px; }
+.review-cell { display: table-cell; width: 33.33%; padding: 10px; vertical-align: top; }
 .review-card {
-    background: white;
-    padding: 30px 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    background: #fff; padding: 26px 20px;
+    border-radius: 12px; text-align: center;
+    box-shadow: 0 3px 14px rgba(0,0,0,.07);
 }
+.rv-stars { color: #ffc107; font-size: 18px; margin-bottom: 12px; }
+.rv-text  { font-size: 14px; color: #555; line-height: 1.7; margin-bottom: 12px; }
+.rv-auth  { font-size: 13px; color: #00a8a8; font-weight: bold; }
 
-.review-stars {
-    color: #ffd700;
-    font-size: 20px;
-    margin-bottom: 15px;
+/* ── FAQ ── */
+.faq { padding: 60px 30px; background: #fff; }
+.faq-item { background: #f4fbfb; padding: 22px 24px; border-radius: 10px; margin-bottom: 12px; }
+.fq { font-size: 16px; font-weight: bold; color: #1a2533; margin-bottom: 8px; }
+.fa { font-size: 14px; color: #555; line-height: 1.75; }
+
+/* ── 보증 ── */
+.guarantee {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: #fff; padding: 40px 30px;
+    text-align: center; border-radius: 14px; margin: 20px;
 }
+.gu-title { font-size: 26px; font-weight: bold; margin-bottom: 10px; }
+.gu-text  { font-size: 15px; opacity: .95; line-height: 1.7; }
 
-.review-text {
-    font-size: 15px;
-    color: #4a5568;
-    line-height: 1.7;
-    margin-bottom: 15px;
-}
-
-.review-author {
-    font-size: 14px;
-    color: #00a8a8;
-    font-weight: bold;
-}
-
-/* 구매 촉진 CTA */
-.cta-section {
+/* ── CTA ── */
+.cta {
     padding: 60px 30px;
     background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    text-align: center;
+    color: #fff; text-align: center;
 }
-
-.cta-title {
-    font-size: 36px;
-    font-weight: bold;
-    margin-bottom: 20px;
+.cta-title { font-size: 32px; font-weight: bold; margin-bottom: 14px; }
+.cta-sub   { font-size: 16px; opacity: .9; margin-bottom: 28px; }
+.cta-box {
+    background: rgba(255,255,255,0.15); border-radius: 14px;
+    padding: 28px; max-width: 560px; margin: 0 auto 30px;
 }
+.cta-price   { font-size: 44px; font-weight: bold; color: #ffd700; margin-bottom: 12px; }
+.cta-benefit { font-size: 15px; margin: 6px 0; }
+.cta-contact { font-size: 14px; opacity: .85; line-height: 2; }
 
-.cta-subtitle {
-    font-size: 18px;
-    margin-bottom: 30px;
-    opacity: 0.95;
-}
-
-.cta-highlight {
-    background: rgba(255,255,255,0.2);
-    padding: 30px;
-    border-radius: 15px;
-    margin: 30px auto;
-    max-width: 600px;
-}
-
-.cta-price {
-    font-size: 48px;
-    font-weight: bold;
-    color: #ffd700;
-    margin-bottom: 10px;
-}
-
-.cta-benefit {
-    font-size: 16px;
-    margin: 8px 0;
-}
-
-/* FAQ (간단) */
-.faq-section {
-    padding: 60px 30px;
-    background: white;
-}
-
-.faq-item {
-    background: #f8f9fa;
-    padding: 25px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-}
-
-.faq-q {
-    font-size: 18px;
-    font-weight: bold;
-    color: #2d3748;
-    margin-bottom: 10px;
-}
-
-.faq-a {
-    font-size: 15px;
-    color: #4a5568;
-    line-height: 1.7;
-}
-
-/* 보증 배너 */
-.guarantee-box {
-    background: linear-gradient(135deg, #f093fb, #f5576c);
-    color: white;
-    padding: 40px 30px;
-    text-align: center;
-    border-radius: 15px;
-    margin: 40px 20px;
-}
-
-.guarantee-title {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.guarantee-text {
-    font-size: 16px;
-    opacity: 0.95;
-}
-
-/* 모바일 반응형 */
-@media (max-width: 768px) {
-    .hero-title { font-size: 28px; }
-    .section-title { font-size: 24px; }
-    .cta-title { font-size: 26px; }
-    .cta-price { font-size: 36px; }
-    
-    .reason-item,
-    .review-box,
-    .color-box {
-        display: block;
-        width: 100%;
-        padding: 15px 0;
+/* ── 모바일 ── */
+@media (max-width: 640px) {
+    .hero, .color-split, .detail-split, .inst-split { display: block; }
+    .hero-text, .hero-img, .cs-img, .cs-info,
+    .ds-info, .ds-img, .is-img, .is-info {
+        display: block; width: 100%;
     }
-    
-    .color-box {
-        display: inline-block;
-        width: 50%;
-    }
+    .hero-img img, .cs-img img { height: 240px; }
+    .ds-img { padding: 0 20px 20px; }
+    .is-img { padding: 20px 20px 0; }
+    .hero-title { font-size: 26px; }
+    .cta-title  { font-size: 24px; }
+    .reason-cell, .review-cell, .inst-cell { display: block; width: 100%; }
 }
 </style>
 
-<div class="product-page">
-    
-    <!-- 메인 히어로 -->
+<div class="pp">
+
+    <!-- ① 히어로: 텍스트 + 메인 제품샷 -->
     <div class="hero">
-        <div class="hero-badge">🇰🇷 전공정 국내생산 | ✅ 식약처 인증 | 🏥 공공기관 납품</div>
-        <h1 class="hero-title">딱 3가지만 기억하세요<br>아하 하모 칫솔</h1>
-        <p class="hero-subtitle">국산 / 식약처 인증 / 합리적 가격</p>
-        
-        <div class="price-box">
-            <div class="price-original">정가 12,000원</div>
-            <div class="price-current">9,000원</div>
-            <span class="price-badge">지금 25% 할인</span>
+        <div class="hero-text">
+            <div class="hero-badge">🇰🇷 전공정 국내생산 &nbsp;|&nbsp; ✅ 식약처 인증 &nbsp;|&nbsp; 🏥 기관 납품</div>
+            <h1 class="hero-title">딱 3가지만<br>기억하세요<br>아하 하모 칫솔</h1>
+            <p class="hero-sub">국산 &nbsp;·&nbsp; 식약처 인증 &nbsp;·&nbsp; 합리적 가격</p>
+            <div class="price-box">
+                <div class="price-original">정가 12,000원</div>
+                <div class="price-current">9,000원</div>
+                <span class="price-badge">지금 25% 할인</span>
+            </div>
+        </div>
+        <div class="hero-img">
+            <img src="__IMG4__" alt="아하 하모 칫솔 4가지 컬러" />
         </div>
     </div>
 
-    <!-- 제품 이미지 -->
-    <div class="image-section">
-        <div class="img-placeholder">
-            📸 4가지 컬러 제품 사진<br>
-            (스마트스토어 에디터에서 이미지 추가)
+    <!-- ② 핵심 이유 3가지 -->
+    <div class="reasons">
+        <div class="sec-hd">
+            <h2 class="sec-title">왜 아하 하모 칫솔인가요?</h2>
+            <p class="sec-sub">단 3가지 이유면 충분합니다</p>
         </div>
-    </div>
-
-    <!-- 핵심 3가지 이유 -->
-    <div class="reasons-section">
-        <div class="section-header">
-            <h2 class="section-title">왜 아하 하모 칫솔인가요?</h2>
-            <p class="section-subtitle">단 3가지 이유면 충분합니다</p>
-        </div>
-
-        <div class="reason-grid">
-            <div class="reason-item">
-                <div class="reason-icon">🇰🇷</div>
-                <h3 class="reason-title">100% 국산</h3>
-                <p class="reason-desc">
-                    기획부터 제조까지<br>
-                    전공정 국내생산<br>
-                    믿을 수 있는 품질
-                </p>
+        <div class="reason-row">
+            <div class="reason-cell">
+                <div class="r-icon">🇰🇷</div>
+                <h3 class="r-title">100% 국산</h3>
+                <p class="r-desc">기획부터 제조까지<br>전공정 국내생산<br>믿을 수 있는 품질</p>
             </div>
-            <div class="reason-item">
-                <div class="reason-icon">✅</div>
-                <h3 class="reason-title">식약처 인증</h3>
-                <p class="reason-desc">
-                    국가기관 검증 완료<br>
-                    위생검사 통과<br>
-                    안심하고 사용
-                </p>
+            <div class="reason-cell">
+                <div class="r-icon">✅</div>
+                <h3 class="r-title">식약처 인증</h3>
+                <p class="r-desc">국가기관 검증 완료<br>위생검사 통과<br>안심하고 사용</p>
             </div>
-            <div class="reason-item">
-                <div class="reason-icon">💰</div>
-                <h3 class="reason-title">합리적 가격</h3>
-                <p class="reason-desc">
-                    벌크포장으로<br>
-                    포장비 절감<br>
-                    25% 할인가
-                </p>
+            <div class="reason-cell">
+                <div class="r-icon">💰</div>
+                <h3 class="r-title">합리적 가격</h3>
+                <p class="r-desc">벌크포장으로<br>포장비 절감<br>25% 할인가</p>
             </div>
         </div>
     </div>
 
-    <!-- 컬러 선택 -->
-    <div class="color-section">
-        <h2 class="color-title">우리 가족 색깔별로 골라요</h2>
-        
-        <div class="color-grid">
-            <div class="color-box">
-                <div class="color-circle color-purple"></div>
-                <div class="color-name">퍼플</div>
-            </div>
-            <div class="color-box">
-                <div class="color-circle color-green"></div>
-                <div class="color-name">그린</div>
-            </div>
-            <div class="color-box">
-                <div class="color-circle color-red"></div>
-                <div class="color-name">레드</div>
-            </div>
-            <div class="color-box">
-                <div class="color-circle color-orange"></div>
-                <div class="color-name">오렌지</div>
-            </div>
+    <!-- ③ 컬러 선택: 제품 사진 + 컬러 정보 -->
+    <div class="color-split">
+        <div class="cs-img">
+            <img src="__IMG2__" alt="4가지 컬러 칫솔" />
+        </div>
+        <div class="cs-info">
+            <h2 class="cs-title">우리 가족<br>색깔별로 골라요</h2>
+            <p class="cs-sub">투명 손잡이 디자인으로<br>각자 색상을 구분해 위생적으로 사용하세요.</p>
+            <ul class="color-list">
+                <li><span class="c-dot c-pink"></span> 핑크 — 감각적인 포인트</li>
+                <li><span class="c-dot c-teal"></span> 틸 — 신선하고 청량한 느낌</li>
+                <li><span class="c-dot c-yellow"></span> 옐로 — 밝고 에너지 넘치는</li>
+                <li><span class="c-dot c-purple"></span> 퍼플 — 고급스러운 컬러</li>
+            </ul>
         </div>
     </div>
 
-    <!-- 제품 이미지 2 -->
-    <div class="image-section">
-        <div class="img-placeholder">
-            📸 투명 손잡이 디자인 사진<br>
-            (스마트스토어 에디터에서 이미지 추가)
-        </div>
-    </div>
-
-    <!-- 신뢰 배지 -->
-    <div class="trust-section">
+    <!-- ④ 신뢰 배지 -->
+    <div class="trust">
         <div class="trust-icon">🏅</div>
         <h3 class="trust-title">식품의약안전처 위생검사 통과</h3>
-        <p class="trust-desc">
-            국가기관의 엄격한 검사를 통과한 검증된 제품입니다<br>
-            전공정 국내생산으로 안전을 보장합니다
-        </p>
+        <p class="trust-desc">국가기관의 엄격한 검사를 통과한 검증된 제품입니다<br>전공정 국내생산으로 안전을 보장합니다</p>
     </div>
 
-    <!-- 공공기관 납품 섹션 -->
-    <div class="reasons-section" style="background: #f8f9fa;">
-        <div class="section-header">
-            <h2 class="section-title">치과·보건소도 선택한 칫솔</h2>
-            <p class="section-subtitle">공공기관이 믿고 사용하는 품질</p>
+    <!-- ⑤ 품질 디테일: 포인트 설명 + 제품 클로즈업 -->
+    <div class="detail-split">
+        <div class="ds-info">
+            <h2 class="ds-title">작은 디테일에서<br>느껴지는 품질</h2>
+            <ul class="point-list">
+                <li><span class="pt-num">1</span><span><strong>초극세모</strong> — 잇몸을 부드럽게 케어하는 미세모 설계</span></li>
+                <li><span class="pt-num">2</span><span><strong>투명 ABS 손잡이</strong> — 위생적이고 모던한 프리미엄 소재</span></li>
+                <li><span class="pt-num">3</span><span><strong>그립감</strong> — 미끄럼 방지 패턴으로 편안한 사용감</span></li>
+                <li><span class="pt-num">4</span><span><strong>국산 소재</strong> — 안전성 검증된 재료만 사용</span></li>
+            </ul>
         </div>
-
-        <div class="reason-grid">
-            <div class="reason-item">
-                <div class="reason-icon">🏥</div>
-                <h3 class="reason-title">보건소 납품</h3>
-                <p class="reason-desc">
-                    전국 보건소에서<br>
-                    구강 보건 사업용으로<br>
-                    사용하는 제품
-                </p>
-            </div>
-            <div class="reason-item">
-                <div class="reason-icon">🦷</div>
-                <h3 class="reason-title">치과 공급</h3>
-                <p class="reason-desc">
-                    치과에서 직접<br>
-                    환자분들께<br>
-                    권하는 칫솔
-                </p>
-            </div>
-            <div class="reason-item">
-                <div class="reason-icon">🏢</div>
-                <h3 class="reason-title">대량 공급</h3>
-                <p class="reason-desc">
-                    학교, 기업, 단체<br>
-                    대량 구매 가능<br>
-                    별도 문의 환영
-                </p>
-            </div>
-        </div>
-
-        <div style="background: white; padding: 30px; border-radius: 15px; margin-top: 40px; text-align: center; box-shadow: 0 3px 15px rgba(0,0,0,0.1);">
-            <h4 style="font-size: 20px; font-weight: bold; color: #2d3748; margin-bottom: 15px;">
-                📞 공공기관·대량구매 전용 상담
-            </h4>
-            <p style="font-size: 16px; color: #4a5568; line-height: 1.8;">
-                치과, 보건소, 학교, 기업 등 대량 구매가 필요하신가요?<br>
-                <strong style="color: #00a8a8;">전용 상담 라인으로 문의주시면 최적의 조건으로 안내해드립니다</strong><br>
-                <span style="font-size: 18px; font-weight: bold; color: #2d3748; margin-top: 10px; display: inline-block;">
-                    ☎️ 1588-0000 | 📧 business@ahabrand.co.kr
-                </span>
-            </p>
+        <div class="ds-img">
+            <img src="__IMG3__" alt="칫솔 품질 디테일" />
         </div>
     </div>
 
-    <!-- 간단 스펙 -->
-    <div class="spec-section">
-        <div class="section-header">
-            <h2 class="section-title">제품 정보</h2>
+    <!-- ⑥ 공공기관 납품: 벌크 패키징 사진 + 설명 -->
+    <div class="inst-split">
+        <div class="is-img">
+            <img src="__IMG1__" alt="벌크 포장 제품" />
         </div>
+        <div class="is-info">
+            <h2 class="is-title">치과·보건소도<br>선택한 칫솔</h2>
+            <p class="is-sub">공공기관이 믿고 사용하는 품질</p>
+            <div class="inst-row">
+                <div class="inst-cell">
+                    <div class="inst-icon">🏥</div>
+                    <div class="inst-label">보건소 납품</div>
+                    <div class="inst-desc">전국 보건소<br>구강보건 사업용</div>
+                </div>
+                <div class="inst-cell">
+                    <div class="inst-icon">🦷</div>
+                    <div class="inst-label">치과 공급</div>
+                    <div class="inst-desc">치과에서 직접<br>환자에게 권하는</div>
+                </div>
+                <div class="inst-cell">
+                    <div class="inst-icon">🏢</div>
+                    <div class="inst-label">대량 공급</div>
+                    <div class="inst-desc">학교·기업·단체<br>별도 문의 환영</div>
+                </div>
+            </div>
+            <div class="contact-box">
+                📞 공공기관·대량구매 전용 상담<br>
+                <strong>☎ 1588-0000</strong> &nbsp;|&nbsp; 📧 business@ahabrand.co.kr
+            </div>
+        </div>
+    </div>
 
+    <!-- ⑦ 제품 스펙 -->
+    <div class="spec">
+        <div class="sec-hd">
+            <h2 class="sec-title">제품 정보</h2>
+        </div>
         <table class="spec-table">
-            <tr>
-                <td class="spec-label">브러시</td>
-                <td class="spec-value">초극세모 (부드러운 미세모)</td>
-            </tr>
-            <tr>
-                <td class="spec-label">손잡이</td>
-                <td class="spec-value">투명 ABS 소재</td>
-            </tr>
-            <tr>
-                <td class="spec-label">컬러</td>
-                <td class="spec-value">4종 (퍼플/그린/레드/오렌지)</td>
-            </tr>
-            <tr>
-                <td class="spec-label">원산지</td>
-                <td class="spec-value">대한민국 (전공정 국내생산)</td>
-            </tr>
-            <tr>
-                <td class="spec-label">인증</td>
-                <td class="spec-value">식품의약안전처 위생검사 통과</td>
-            </tr>
-            <tr>
-                <td class="spec-label">사용 연령</td>
-                <td class="spec-value">전 연령 (어린이~성인)</td>
-            </tr>
+            <tr><td class="sl">브러시</td><td class="sv">초극세모 (부드러운 미세모)</td></tr>
+            <tr><td class="sl">손잡이</td><td class="sv">투명 ABS 소재</td></tr>
+            <tr><td class="sl">컬러</td><td class="sv">4종 (핑크·틸·옐로·퍼플)</td></tr>
+            <tr><td class="sl">원산지</td><td class="sv">대한민국 (전공정 국내생산)</td></tr>
+            <tr><td class="sl">인증</td><td class="sv">식품의약안전처 위생검사 통과</td></tr>
+            <tr><td class="sl">사용 연령</td><td class="sv">전 연령 (어린이~성인)</td></tr>
         </table>
     </div>
 
-    <!-- 제품 이미지 3 -->
-    <div class="image-section">
-        <div class="img-placeholder">
-            📸 벌크포장 실제 제품 사진<br>
-            (스마트스토어 에디터에서 이미지 추가)
+    <!-- ⑧ 후기 -->
+    <div class="review">
+        <div class="sec-hd">
+            <h2 class="sec-title">실제 구매자 후기</h2>
+            <p class="sec-sub">만족도 98% 실제 사용 후기</p>
         </div>
-    </div>
-
-    <!-- 간단 후기 -->
-    <div class="review-section">
-        <div class="section-header">
-            <h2 class="section-title">실제 구매자 후기</h2>
-            <p class="section-subtitle">만족도 98% 실제 사용 후기</p>
-        </div>
-
-        <div class="review-grid">
-            <div class="review-box">
+        <div class="review-row">
+            <div class="review-cell">
                 <div class="review-card">
-                    <div class="review-stars">★★★★★</div>
-                    <p class="review-text">
-                        "보건소에서 받아본<br>
-                        그 칫솔이네요!<br>
-                        역시 품질 좋아요"
-                    </p>
-                    <p class="review-author">김○○님</p>
+                    <div class="rv-stars">★★★★★</div>
+                    <p class="rv-text">"보건소에서 받아본 그 칫솔이네요! 역시 품질 좋아요"</p>
+                    <p class="rv-auth">김○○님</p>
                 </div>
             </div>
-            <div class="review-box">
+            <div class="review-cell">
                 <div class="review-card">
-                    <div class="review-stars">★★★★★</div>
-                    <p class="review-text">
-                        "가족 모두 색깔별로<br>
-                        사용하고 있어요<br>
-                        가성비 최고!"
-                    </p>
-                    <p class="review-author">이○○님</p>
+                    <div class="rv-stars">★★★★★</div>
+                    <p class="rv-text">"가족 모두 색깔별로 사용하고 있어요. 가성비 최고!"</p>
+                    <p class="rv-auth">이○○님</p>
                 </div>
             </div>
-            <div class="review-box">
+            <div class="review-cell">
                 <div class="review-card">
-                    <div class="review-stars">★★★★★</div>
-                    <p class="review-text">
-                        "치과에서 권해줘서<br>
-                        직접 구매했어요<br>
-                        만족합니다!"
-                    </p>
-                    <p class="review-author">박○○님</p>
+                    <div class="rv-stars">★★★★★</div>
+                    <p class="rv-text">"치과에서 권해줘서 직접 구매했어요. 만족합니다!"</p>
+                    <p class="rv-auth">박○○님</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- FAQ -->
-    <div class="faq-section">
-        <div class="section-header">
-            <h2 class="section-title">자주 묻는 질문</h2>
+    <!-- ⑨ FAQ -->
+    <div class="faq">
+        <div class="sec-hd">
+            <h2 class="sec-title">자주 묻는 질문</h2>
         </div>
-
         <div class="faq-item">
-            <div class="faq-q">Q. 정말 전공정 국내생산인가요?</div>
-            <div class="faq-a">A. 네! 기획부터 제조까지 모든 공정을 대한민국에서 진행합니다. 식약처 위생검사도 통과한 검증된 제품입니다.</div>
+            <div class="fq">Q. 정말 전공정 국내생산인가요?</div>
+            <div class="fa">A. 네! 기획부터 제조까지 모든 공정을 대한민국에서 진행합니다. 식약처 위생검사도 통과한 검증된 제품입니다.</div>
         </div>
-
         <div class="faq-item">
-            <div class="faq-q">Q. 치과나 보건소에 실제로 납품되나요?</div>
-            <div class="faq-a">A. 네! 전국 치과, 보건소 등 공공기관에 실제로 납품되고 있는 검증된 제품입니다. 공공기관이 선택한 품질을 가정에서도 동일하게 경험하실 수 있습니다.</div>
+            <div class="fq">Q. 치과나 보건소에 실제로 납품되나요?</div>
+            <div class="fa">A. 네! 전국 치과, 보건소 등 공공기관에 납품되고 있는 검증된 제품입니다.</div>
         </div>
-
         <div class="faq-item">
-            <div class="faq-q">Q. 벌크포장은 몇 개 들어있나요?</div>
-            <div class="faq-a">A. 구매 옵션에 따라 다릅니다. 개별 구매 또는 대용량 벌크 구매 모두 가능하며, 벌크 구매 시 더욱 저렴합니다.</div>
+            <div class="fq">Q. 컬러를 선택할 수 있나요?</div>
+            <div class="fa">A. 핑크, 틸, 옐로, 퍼플 4가지 컬러 중 선택 가능합니다. (재고 상황에 따라 랜덤 발송될 수 있습니다)</div>
         </div>
-
         <div class="faq-item">
-            <div class="faq-q">Q. 어린이도 사용 가능한가요?</div>
-            <div class="faq-a">A. 네! 부드러운 초극세모로 제작되어 어린이부터 성인까지 전 연령이 안전하게 사용 가능합니다.</div>
+            <div class="fq">Q. 어린이도 사용 가능한가요?</div>
+            <div class="fa">A. 네! 부드러운 초극세모로 어린이부터 성인까지 전 연령이 안전하게 사용 가능합니다.</div>
         </div>
-
         <div class="faq-item">
-            <div class="faq-q">Q. 컬러를 선택할 수 있나요?</div>
-            <div class="faq-a">A. 퍼플, 그린, 레드, 오렌지 4가지 컬러 중 선택 가능합니다. (재고 상황에 따라 랜덤 발송될 수 있습니다)</div>
-        </div>
-
-        <div class="faq-item">
-            <div class="faq-q">Q. 대량 구매(학교, 기업 등)도 가능한가요?</div>
-            <div class="faq-a">A. 네! 학교, 기업, 단체 등 대량 구매 가능합니다. 전용 상담 라인(1588-0000)으로 문의 주시면 최적의 조건으로 안내해드립니다.</div>
+            <div class="fq">Q. 대량 구매(학교, 기업 등)도 가능한가요?</div>
+            <div class="fa">A. 네! 전용 상담 라인(1588-0000)으로 문의 주시면 최적의 조건으로 안내해드립니다.</div>
         </div>
     </div>
 
-    <!-- 보증 배너 -->
-    <div class="guarantee-box">
-        <div class="guarantee-title">🛡️ 100% 만족 보장</div>
-        <p class="guarantee-text">
-            제품이 마음에 들지 않으시면<br>
-            14일 내 무조건 전액 환불해드립니다
-        </p>
+    <!-- ⑩ 보증 -->
+    <div class="guarantee">
+        <div class="gu-title">🛡️ 100% 만족 보장</div>
+        <p class="gu-text">제품이 마음에 들지 않으시면<br>14일 내 무조건 전액 환불해드립니다</p>
     </div>
 
-    <!-- 최종 CTA -->
-    <div class="cta-section">
+    <!-- ⑪ 최종 CTA -->
+    <div class="cta">
         <h2 class="cta-title">지금 바로 시작하세요</h2>
-        <p class="cta-subtitle">건강한 구강케어의 첫걸음</p>
-
-        <div class="cta-highlight">
+        <p class="cta-sub">건강한 구강케어의 첫걸음</p>
+        <div class="cta-box">
             <div class="cta-price">9,000원</div>
             <div class="cta-benefit">✓ 전공정 국내생산</div>
             <div class="cta-benefit">✓ 식약처 위생검사 통과</div>
             <div class="cta-benefit">✓ 4가지 컬러 선택</div>
             <div class="cta-benefit">✓ 무료배송 (3만원 이상)</div>
         </div>
-
-        <div style="margin-top: 40px; font-size: 15px; opacity: 0.9;">
-            <p>📞 고객센터: 1588-0000 (평일 09:00-18:00)</p>
-            <p>📧 이메일: support@ahabrand.co.kr</p>
-        </div>
+        <p class="cta-contact">
+            📞 고객센터: 1588-0000 (평일 09:00~18:00)<br>
+            📧 support@ahabrand.co.kr
+        </p>
     </div>
 
 </div>
+"""
 
-<!-- 
-===========================================
-네이버 스마트스토어 적용 가이드
-===========================================
-
-✅ 이 버전의 특징:
-1. 단순하고 명확한 메시지
-2. 구매 전환에 집중된 구조
-3. 핵심 3가지 이유만 강조
-4. 불필요한 요소 제거
-5. 모바일 최적화
-6. 공공기관 납품 강조로 신뢰도 극대화
-
-📝 적용 방법:
-1. 스마트스토어 상품 등록/수정
-2. 상세설명 → HTML 직접편집
-3. 전체 코드 붙여넣기
-4. 일반모드로 전환 후 이미지 3장 추가:
-   - 4가지 컬러 칫솔 나열 사진
-   - 투명 손잡이 디테일 사진
-   - 벌크포장 실제 제품 사진
-5. 저장 및 미리보기 확인
-
-💡 구매 전환 최적화 포인트:
-- 헤더에서 즉시 3가지 핵심 가치 전달
-- "딱 3가지만 기억하세요" → 인지 부담 감소
-- 공공기관 납품 → 최강 신뢰 신호
-- 컬러 선택 → 개인화 욕구 자극
-- 후기 3개만 → 신뢰도 확보
-- FAQ로 구매 장벽 제거
-- 최종 CTA에서 모든 혜택 재강조
-
-📊 B2C + B2B 동시 공략:
-- B2C: 공공기관 품질로 안심 구매
-- B2B: 전용 상담 라인으로 추가 매출
-===========================================
--->"""
-
-# 파일 저장
 file_path = save_dir / 'aha_hamo_toothbrush_detail_page.html'
 
-try:
-    with open(file_path, 'w', encoding='utf-8') as f:
-        f.write(html_content)
-    
-    print("✅ 상세페이지 HTML 파일 저장 완료!")
-    print(f"📁 저장 경로: {file_path}")
-    print(f"📄 파일명: aha_hamo_toothbrush_detail_page.html")
-    print(f"📊 파일 크기: {os.path.getsize(file_path):,} bytes")
-    print("\n" + "="*60)
-    print("📝 다음 단계:")
-    print("1. 파일을 텍스트 에디터로 열기")
-    print("2. 전체 내용 복사")
-    print("3. 네이버 스마트스토어 → 상품등록 → HTML 직접편집")
-    print("4. 붙여넣기 후 이미지 추가")
-    print("="*60)
+with open(file_path, 'w', encoding='utf-8') as f:
+    f.write(html_content)
 
-except Exception as e:
-    print(f"❌ 오류 발생: {e}")
-    print("\n대안 방법:")
-    print("1. F:\\dev\\projects\\shop_test 폴더를 수동으로 생성")
-    print("2. 메모장으로 새 파일 만들기")
-    print("3. 아티팩트의 HTML 코드 복사")
-    print("4. 파일명: aha_hamo_toothbrush_detail_page.html 로 저장")
+print(f"Saved: {file_path}  ({os.path.getsize(file_path):,} bytes)")
