@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"F:\\\\dev\\\\projects\\\\shop_test\" /s /b)",
+      "Bash(python save_page.py)"
+    ]
+  }
+}
